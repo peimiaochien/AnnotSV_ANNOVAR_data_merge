@@ -22,7 +22,8 @@ def sv_data_arrange(sv_data, num):
     data = pd.read_csv(sv_data, sep=',')
     col = ['Chr', 'Start', 'End', 'SV_length', 'SV_type', 'Gene_name', 'Func.refGene/Location1','ExonicFunc.refGene/location2', \
            'Variant_ID', 'GD_AF_EAS', 'GD_POPMAX_AF', 'ACMG_classes/AnnotSV_ranking', 'Variant_type']
-    col.append(f'test0{num}')
+    sv_para = sv_data.split('/')[-1].split('.')[0].replace('SV', '')
+    col.append(sv_para)
     data.columns = col
     return data
 
@@ -30,7 +31,8 @@ def snv_data_arrange(snv_data, num):
     data = pd.read_csv(snv_data)
     col = ['Chr', 'Start', 'End', 'Func.refGene/Location1', 'ExonicFunc.refGene/location2', 'Gene_name', 'AAChange', 'GD_AF_EAS',\
            'drop', 'Variant_ID']
-    col.append(f'test0{num}')
+    snv_para = snv_data.split('/')[-1].split('.')[0].replace('SNV', '')
+    col.append(snv_para)
     data.columns = col
     data.drop(['drop'], axis=1, inplace=True)
     return data
@@ -52,8 +54,9 @@ data = sv_df.append(snv_df, ignore_index=True)
 data_col = ['Chr', 'Start', 'End', 'SV_length', 'SV_type', 'Gene_name', 'Func.refGene/Location1', 'ExonicFunc.refGene/location2', 'Variant_ID',\
             'GD_AF_EAS', 'GD_POPMAX_AF', 'ACMG_classes/AnnotSV_ranking', 'Variant_type', 'AAChange']
 
-for i in range(len(sv_data_list)):
-    data_col.append(f'test0{i+1}')
+for sample in sv_data_list:
+    sample_para = sample.split('/')[-1].split('.')[0].replace('SV', '')
+    data_col.append(sample_para) 
 data = data[data_col].fillna('NAN')
 sample_df = data[data.columns[14:]]
 sample_row = sample_df.shape[0]
@@ -76,8 +79,9 @@ data['Candidate_gene_filter'] = candidate_gene_filter
 # sort columns
 data_col = ['Chr', 'Start', 'End', 'SV_length', 'SV_type', 'Gene_name', 'Func.refGene/Location1', 'ExonicFunc.refGene/location2', 'Variant_ID',\
             'GD_AF_EAS', 'GD_POPMAX_AF', 'ACMG_classes/AnnotSV_ranking', 'Variant_type', 'AAChange', 'Candidate_gene_filter']
-for i in range(len(sv_data_list)):
-    data_col.append(f'test0{i+1}')
+for sample in sv_data_list:
+    sample_para = sample.split('/')[-1].split('.')[0].replace('SV', '')
+    data_col.append(sample_para)
 data_col.append('Counts')
 
 data = data[data_col]

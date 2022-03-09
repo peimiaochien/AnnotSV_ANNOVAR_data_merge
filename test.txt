@@ -1,4 +1,4 @@
-Chr	Start	End	SV_length	SV_type	Gene_name	Func.refGene/Location1	ExonicFunc.refGene/location2	Variant_ID	GD_AF_EAS	GD_POPMAX_AF	ACMG_classes/AnnotSV_ranking	Variant_type	AAChange	Candidate_gene_filter	test01	test02	Counts
+Chr	Start	End	SV_length	SV_type	Gene_name	Func.refGene/Location1	ExonicFunc.refGene/location2	Variant_ID	GD_AF_EAS	GD_POPMAX_AF	ACMG_classes/AnnotSV_ranking	Variant_type	AAChange	Candidate_gene_filter	test01_	test02_	Counts
 chr1	1063202	1063202	NAN	NAN	LOC100288175	ncRNA_splicing	.	rs3813194	0.7654	NAN	NAN	NAN	.	-	1/1	1/1	2
 chr1	1072052	1072052	NAN	NAN	RNF223	exonic	nonsynonymous SNV	rs4333796	0.7623	NAN	NAN	NAN	RNF223:NM_001205252:exon2:c.C515T:p.A172V	-	1/1	1/1	2
 chr1	1142758	1142758	NAN	NAN	LINC01342	ncRNA_exonic	.	rs12022640	0.1739	NAN	NAN	NAN	.	-	0/1	0/1	2
