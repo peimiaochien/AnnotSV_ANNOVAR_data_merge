@@ -5,33 +5,22 @@ import argparse
 from warnings import simplefilter
 simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 parser = argparse.ArgumentParser()
-parser.add_argument("-sv")
-parser.add_argument("-snv")
-parser.add_argument("-cnv")
-parser.add_argument("-repeats")
+parser.add_argument("-dfolder", help="put all data you want to merge in the folder, same sample merging files must have same para and in  use SV/SNV/repeat/CNV to annotate file type in file name")
 parser.add_argument("-g", help="gene list in csv formate")
 parser.add_argument("-o", help="output file name")
+parser.add_argument("-para_list", help='sample_para_list')
 args = parser.parse_args()
 
 
-# data import
-sv_data_list = args.sv
-snv_data_list = args.snv
-repeat_data_list = args.repeats
-cnv_data_list = args.cnv
+candidate_gene_list = pd.read_csv(args.g, sep='\t', header=None)[0].to_list()
 
-gene = pd.read_csv(args.g, sep='\t', header=None)
-sample_list = []
-
-# annovar multianno.txt
-def annovar_data_arrange(annovar_data):
-    data = pd.read_csv(annovar_data, sep='\t',
-                       usecols=['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
-                                'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'AF',
-                                'AF_popmax', 'AF_sas', 'AF_eas', 'avsnp150',
-                                'TaiwanBiobank-official_Illumina1000-AF', 'AF.1', 'AF_popmax.1',
-                                'AF_sas.1', 'AF_eas.1', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
-                                'Otherinfo11', 'Otherinfo12', 'Otherinfo13'])
+def annovar_data_arrange(annovar_data, sample_para):
+    data = pd.read_csv(annovar_data, sep='\t', usecols=['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
+       'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'AF',
+       'AF_popmax', 'AF_sas', 'AF_eas', 'avsnp150',
+       'TaiwanBiobank-official_Illumina1000-AF', 'AF.1', 'AF_popmax.1',
+       'AF_sas.1', 'AF_eas.1', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
+       'Otherinfo11', 'Otherinfo12', 'Otherinfo13'])
     data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
        'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF',
        'genome_AF_popmax', 'genome_AF_sas', 'genome_AF_eas', 'avsnp150',
@@ -39,14 +28,11 @@ def annovar_data_arrange(annovar_data):
        'exome_AF_sas', 'exome_AF_eas', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
        'Otherinfo11', 'Otherinfo12', 'Otherinfo13']
     data['Chr'] = data['Chr'].astype('object')
-    snv_para = annovar_data.split('/')[-1]
-    sample_list.append(snv_para)
-    data[snv_para] = [ variant.split(',')[0].split(':')[0] for variant in data['Otherinfo13'].to_list()]
-    data.drop(['Otherinfo13'], axis=1, inplace=True)
+    data[sample_para] = [ variant.split(',')[0].split(':')[0] for variant in data['Otherinfo13'].to_list()]
     return data
 
-# re-asign columns 20220321
-def annotsv_data_arrange(annotsv_data):
+
+def annotsv_data_arrange(annotsv_data, sample_para):
     data = pd.read_csv(annotsv_data, sep='\t', usecols=[1,2,3,4,5,7,8,9,10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95], low_memory=False)
     data.columns = ['Chr', 'Start', 'End', 'SV_length', 'SV_type', 'ID', 'Ref', 'Alt', 'QUAL',
        'FILTER', 'INFO', 'FORMAT', 'sample', 'Annotation_mode', 'Gene_name',
@@ -73,44 +59,68 @@ def annotsv_data_arrange(annotsv_data):
        'AnnotSV_ranking_criteria', 'ACMG_class']
 
     data = data[data['Annotation_mode'] == 'split']
-    data['Chr'] = [f"chr{num}" for num in data['Chr'].tolist()]
-    sv_para = annotsv_data.split('/')[-1]
-    sample_list.append(sv_para)
-    data[sv_para] = [sample.split(':')[0] for sample in data['sample'].to_list()]
+    data['Chr'] = [f'chr{num}' for num in data['Chr'].to_list()]
+    data[sample_para] = [sample.split(':')[0] for sample in data['sample'].to_list()]
     data.drop(['sample'], axis=1, inplace=True)
     return data
 
-sv_df = annotsv_data_arrange(sv_data_list)
-repeat_df = annotsv_data_arrange(repeat_data_list)
-cnv_df = annotsv_data_arrange(cnv_data_list)
-snv_df = annovar_data_arrange(snv_data_list)
 
 
+def annotsv(sample_para):
+    sv_data = glob.glob(f'{args.dfolder}/{sample_para}*sv*')[0]
+    cnv_data = glob.glob(f'{args.dfolder}/{sample_para}*cnv*')[0]
+    repeats_data = glob.glob(f'{args.dfolder}/{sample_para}*cnv*')[0]
+    sv_df = annotsv_data_arrange(sv_data, sample_para)
+    cnv_df = annotsv_data_arrange(cnv_data, sample_para)
+    repeats_df = annotsv_data_arrange(repeats_data, sample_para)
+    return sv_df, cnv_df, repeats_df
 
-# append --> concat method
-data = sv_df.merge(snv_df, on=['Chr', 'Start', 'End','Ref', 'Alt'], how='outer')
-data = data.merge(cnv_df, on=['Chr', 'Start', 'End','Ref', 'Alt'], how='outer')
-data = data.merge(repeat_df, on=['Chr', 'Start', 'End','Ref', 'Alt'], how='outer')
-data.fillna(value='NaN', inplace=True)
+def annovar(sample_para):
+    snv_data = glob.glob(f'{args.dfolder}/{sample_para}*snv*')[0]
+    snv_df = annovar_data_arrange(snv_data, sample_para)
+    return snv_df
 
-### 20220322
+#sample import
+total_df = pd.DataFrame()
+sample_list = pd.read_csv(args.para_list, sep='\t', header=None)[0].to_list()
+for sample_para in sample_list:
+    sv_df, cnv_df, repeats_df = annotsv(sample_para)
+    snv_df = annovar(sample_para)
+    total_df = total_df.append([snv_df, sv_df, cnv_df, repeats_df], ignore_index=True)
+total_df.fillna(value='NaN', inplace=True)
+
+col_list = total_df.columns.to_list()[5:]
+for sample_para in sample_list:
+    col_list.remove(sample_para)
+
+total_df = total_df.groupby(['Chr', 'Start', 'End', 'Ref', 'Alt'])
+
+final_data = total_df.size().to_frame(name='count').reset_index().drop(['count'], axis=1)
+# other than sample
+for col in col_list:
+    final_data[col] = [data[0] for data in total_df[col].agg([(col, lambda x: list(set(x)))])[col].tolist()]
+
+# data
+for sample_para in sample_list:
+    final_data[sample_para] = [ data[1] if len(data) > 1 else data[0] for data in total_df[sample_para].agg([(sample_para, lambda x:list(set(x)))])[sample_para].tolist()]
+
+# count
 Counts = []
-for i in range(len(data)):
+for i in range(len(final_data)):
     count=0
     for sample in sample_list:
-        if (data[sample].iloc[i] != 'NaN') and (data[sample].iloc[i] != '.'):
+        if (final_data[sample].iloc[i] != 'NaN') and (final_data[sample].iloc[i] != '.') and (final_data[sample].iloc[i] != '0/0'):
             count += 1
     Counts.append(count)
-
-data['Counts'] = Counts
-
+final_data['Counts'] = Counts
 
 # candidate gene filter
-candidate = gene[0].to_list()
-gene_list = data['Gene_name'].to_list()
-candidate_gene_filter = ['+' if gene in candidate else '-' for gene in gene_list]
-data['Candidate_gene_filter'] = candidate_gene_filter
+
+gene_list = final_data['Gene_name'].to_list()
+candidate_gene_filter = ['+' if gene in candidate_gene_list else '-' for gene in gene_list]
+final_data['Candidate_gene_filter'] = candidate_gene_filter
+
+final_data.sort_values(by=['Chr', 'Start'], inplace=True)
+final_data.to_csv(args.o, sep='\t', index=False)
 
 
-data.sort_values(by=['Chr', 'Start'], inplace=True)
-data.to_csv(args.o, sep='\t', index=False)

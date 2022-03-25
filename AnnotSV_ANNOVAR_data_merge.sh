@@ -20,11 +20,12 @@ set -x
 
 
 module add pkg/Anaconda3
-gene_list="gene.list" 
-sv_input="./data/dragen_v3.9_20220323_1.sv.sorted.vcf.annotSV.output.txt"
-snv_input="./data/dragen_v3.9_20220323_1.snv.txt"
-cnv_input="./data/dragen_v3.9_20220323_1.cnv.sorted.vcf.annotSV.output.txt"
-repeats_input="./data/dragen_v3.9_20220323_1.repeats.sorted.vcf.annotSV.output.txt"
+gene_list="gene_list.txt" 
+sample_para_list="sample_para_list.txt"
+data_folder='./data'
 output="merging_output.txt"
 
-python  AnnotSV_ANNOVAR_data_merge.py -g ${gene_list} -sv ${sv_input} -snv ${snv_input} -cnv ${cnv_input} -repeats ${repeats_input} -o ${output}
+
+
+
+python  AnnotSV_ANNOVAR_data_merge.py -g ${gene_list} -para_list ${sample_para_list} -dfolder ${data_folder} -o ${output}
