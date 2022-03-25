@@ -1,6 +1,6 @@
 # AnnotSV_ANNOVAR_data_merge
 
-same sample output should have same sample para <\br>
+same sample output should have same sample para 
 
 the files name should include sv/snv/cnv/repeats for the script to distinguish
 
