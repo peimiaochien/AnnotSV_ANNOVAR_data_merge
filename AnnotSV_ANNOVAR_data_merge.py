@@ -87,7 +87,7 @@ for sample_para in sample_list:
     sv_df, cnv_df, repeats_df = annotsv(sample_para)
     snv_df = annovar(sample_para)
     total_df = total_df.append([snv_df, sv_df, cnv_df, repeats_df], ignore_index=True)
-total_df.fillna(value='NaN', inplace=True)
+total_df.fillna(value='.', inplace=True)
 
 col_list = total_df.columns.to_list()[5:]
 for sample_para in sample_list:
