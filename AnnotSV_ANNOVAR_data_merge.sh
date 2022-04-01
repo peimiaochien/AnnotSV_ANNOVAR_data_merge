@@ -10,6 +10,10 @@
 #SBATCH --mail-type=FAIL
 
 
+# This script goal is to merge ANNOVAR and AnnotSV results together from one or multiple samples
+# Also use gene list to make filter
+
+
 
 TIME=`date +%Y%m%d%H%M`
 logfile=./${TIME}_${ID}_run.log
@@ -18,14 +22,14 @@ exec >$logfile 2>&1
 set -euo pipefail
 set -x
 
-
+# update your files path here
 module add pkg/Anaconda3
-gene_list="gene_list.txt" 
-sample_para_list="sample_para_list.txt"
-data_folder='./data'
-output="merging_output.txt"
+gene_list="./input/gene_list.txt" 
+sample_para_list="./input/sample_para_list.txt"
+data_folder='./input'
+output="./output/merging_output.txt"
 
 
 
-
+# Dont change command bellow
 python  AnnotSV_ANNOVAR_data_merge.py -g ${gene_list} -para_list ${sample_para_list} -dfolder ${data_folder} -o ${output}
