@@ -10,8 +10,8 @@
    * snv comes from ANNOVAR result, use hg19 version ANNOVAR due to TWB1496 database information is needed, the latest ANNOVAR has update in Github already
 
 renew the information in AnnotSV_ANNOVAR_data_merge.sh
-sbatch AnnotSV_ANNOVAR_data_merge.sh
-
+`sbatch AnnotSV_ANNOVAR_data_merge.sh`
+***
 ## Output
 
 
