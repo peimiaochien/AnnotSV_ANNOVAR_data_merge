@@ -1,6 +1,10 @@
 # AnnotSV_ANNOVAR_data_merge
 
-same sample output should have same sample para 
+##Input##
+1. sample para list
+   * one sample should have same para 
+3. gene list
+   * gene name one is interested in
 
 the files name should include sv/snv/cnv/repeats for the script to distinguish
 
