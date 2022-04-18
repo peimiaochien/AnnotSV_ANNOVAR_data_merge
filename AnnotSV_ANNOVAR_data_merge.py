@@ -15,18 +15,30 @@ args = parser.parse_args()
 candidate_gene_list = pd.read_csv(args.g, sep='\t', header=None)[0].to_list()
 
 def annovar_data_arrange(annovar_data, sample_para):
-    data = pd.read_csv(annovar_data, sep='\t', usecols=['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
-       'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'AF',
-       'AF_popmax', 'AF_sas', 'AF_eas', 'avsnp150',
-       'TaiwanBiobank-official_Illumina1000-AF', 'AF.1', 'AF_popmax.1',
-       'AF_sas.1', 'AF_eas.1', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
-       'Otherinfo11', 'Otherinfo12', 'Otherinfo13'])
-    data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
-       'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF',
-       'genome_AF_popmax', 'genome_AF_sas', 'genome_AF_eas', 'avsnp150',
-       'TaiwanBiobank-official_Illumina1000-AF', 'exome_AF', 'exome_popmax',
-       'exome_AF_sas', 'exome_AF_eas', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
-       'Otherinfo11', 'Otherinfo12', 'Otherinfo13']
+    try:
+        data = pd.read_csv(annovar_data, sep='\t', usecols=['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
+           'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'AF','AF_popmax', 'AF_sas', 'AF_eas', 'avsnp150',
+           'TaiwanBiobank-official_Illumina1000-AF', 'AF.1', 'AF_popmax.1',
+           'AF_sas.1', 'AF_eas.1', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
+           'Otherinfo11', 'Otherinfo12', 'Otherinfo13'])
+        data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
+           'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF',
+           'genome_AF_popmax', 'genome_AF_sas', 'genome_AF_eas', 'avsnp150',
+           'TaiwanBiobank-official_Illumina1000-AF', 'exome_AF', 'exome_popmax',
+           'exome_AF_sas', 'exome_AF_eas', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
+           'Otherinfo11', 'Otherinfo12', 'Otherinfo13']
+    except ValueError:
+        data = pd.read_csv(annovar_data, sep='\t',usecols=['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
+                                                           'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'AF',
+                                                           'AF_popmax', 'AF_sas', 'AF_eas', 'avsnp150','TaiwanBiobank-official_Illumina1000-AF',
+                                                           'AF.1', 'AF_popmax.1','AF_sas.1', 'AF_eas.1',
+                                                           'Otherinfo10','Otherinfo11', 'Otherinfo12', 'Otherinfo13'])
+        data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene','ExonicFunc.refGene',
+                        'AAChange.refGene', 'Gene.ensGene', 'genome_AF','genome_AF_popmax', 'genome_AF_sas',
+                        'genome_AF_eas', 'avsnp150','TaiwanBiobank-official_Illumina1000-AF', 'exome_AF',
+                        'exome_popmax','exome_AF_sas', 'exome_AF_eas', 'Otherinfo10','Otherinfo11', 'Otherinfo12',
+                        'Otherinfo13']
+
     data['Chr'] = data['Chr'].astype('object')
     data[sample_para] = [ variant.split(',')[0].split(':')[0] for variant in data['Otherinfo13'].to_list()]
     return data
@@ -122,5 +134,4 @@ final_data['Candidate_gene_filter'] = candidate_gene_filter
 
 final_data.sort_values(by=['Chr', 'Start'], inplace=True)
 final_data.to_csv(args.o, sep='\t', index=False)
-
 
