@@ -9,7 +9,7 @@ Also based on providing gene list to get filter information.
    * gene name one is interested in
 4. the input files name should include sv/snv/cnv/repeats for the script to distinguish
    * sv/cnv/repeats comes from AnnotSV result 
-   * snv comes from ANNOVAR result
+   * snv comes from ANNOVAR result(use run_annotation_hg19.sh or run_annotation_hg38.sh to generate files)
 
 Renew the information in AnnotSV_ANNOVAR_data_merge.sh <br>
 `sbatch AnnotSV_ANNOVAR_data_merge.sh` <br>
