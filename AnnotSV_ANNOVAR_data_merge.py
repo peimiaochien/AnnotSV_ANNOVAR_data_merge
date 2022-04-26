@@ -19,14 +19,14 @@ def annovar_data_arrange(annovar_data, sample_para, ref_version):
     if ref_version == 'hg19':
         data = pd.read_csv(annovar_data, sep='\t', usecols=[0, 1, 2, 3, 4, 5, 6, 8, 9, 17, 21, 22, 27, 29, 38, 39, 40, 41, 46, 48, 118, 119, 129, 130, 131, 132])
         data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene',
-           'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF',
+           'ExonicFunc.refGene', 'AAChange.refGene', 'Gene_name', 'genome_AF',
            'genome_AF_popmax', 'genome_AF_sas', 'genome_AF_eas', 'avsnp150',
            'TaiwanBiobank-official_Illumina1000-AF', 'exome_AF', 'exome_popmax',
            'exome_AF_sas', 'exome_AF_eas', 'TWB1496_AF', 'TWB1496_QC', 'Otherinfo10',
            'Otherinfo11', 'Otherinfo12', 'Otherinfo13']
     elif ref_version == 'hg38':
         data = pd.read_csv(annovar_data, sep='\t', usecols=[0, 1, 2, 3, 4, 5, 6, 8, 9, 17, 21, 29, 33, 34, 35, 36, 41, 43, 119, 120, 121, 122])
-        data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene.refGene', 'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF', 'genome_AF_eas', 'genome_AF_sas',
+        data.columns = ['Chr', 'Start', 'End', 'Ref', 'Alt', 'Func.refGene', 'Gene_name', 'ExonicFunc.refGene', 'AAChange.refGene', 'Gene.ensGene', 'genome_AF', 'genome_AF_eas', 'genome_AF_sas',
                         'avsnp150', 'exome_AF', 'exome_AF_popmax', 'exome_AF_sas', 'exome_AF_eas', 'Otherinfo10', 'Otherinfo11', 'Otherinfo12', 'Otherinfo13']
     else:
         print('Only provide hg19 and hg38 ANNOVAR annotation results in merging')
