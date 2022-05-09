@@ -46,7 +46,7 @@ def annovar_data_arrange(annovar_data, sample_para, ref_version):
     else:
         print('Only provide hg19 and hg38 ANNOVAR annotation results in merging')
     data['Chr'] = data['Chr'].astype('object')
-    data[sample_para] = [ variant.split(',')[0].split(':')[0] for variant in data['Otherinfo13'].to_list()]
+    data[sample_para] = [ variant.split(':')[0] for variant in data['Otherinfo13'].to_list()]
     return data
 
 
