@@ -24,12 +24,12 @@ set -x
 
 # update your files path here
 module add pkg/Anaconda3
-gene_list="./gene_list.txt" 
-sample_para_list="./sample_para_list.txt"
+gene_list="./input/gene_list.txt" 
+sample_para_list="./input/sample_para_list.txt"
 data_folder='./input'
-output="./merging_output.txt"
+output="./output/merging_output.txt"
 # reference_version only hg38 or hg19
-reference_version='hg38'
+reference_version='hg19'
 
 
 # Dont change command bellow
