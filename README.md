@@ -13,7 +13,7 @@ Also based on providing gene list to get filter information.
 
 Renew the information in AnnotSV_ANNOVAR_data_merge.sh <br>
 `sbatch AnnotSV_ANNOVAR_data_merge.sh` <br>
-Base on **Chr, Start, End, Ref, Alt** , the information from AnnotSV and ANNOVAR will merge together.
+Base on **Chr, Start, End, Ref, Alt** , the information from AnnotSV and ANNOVAR will merge together. In each variant, same sample genotype will be merged together and  with ',' as seperate, also duplicate genotypes will be remove.
 ***
 ## Output
 
