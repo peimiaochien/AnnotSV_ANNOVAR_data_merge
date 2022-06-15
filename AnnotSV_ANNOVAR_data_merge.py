@@ -89,18 +89,18 @@ def annotsv_data_arrange(annotsv_data, sample_para):
 
 
 def annotsv(sample_para):
-    sv_data = glob.glob(f'{dfolder}/{sample_para}*sv*')[0]
-    cnv_data = glob.glob(f'{dfolder}/{sample_para}*cnv*')[0]
-    repeats_data = glob.glob(f'{dfolder}/{sample_para}*repeats*')[0]
-    sv_df, sv_acmg_df = annotsv_data_arrange(sv_data, sample_para)
-    cnv_df, cnv_acmg_df= annotsv_data_arrange(cnv_data, sample_para)
-    repeats_df, repeats_acmg_df = annotsv_data_arrange(repeats_data, sample_para)
-    acmg_df = pd.concat([sv_acmg_df, cnv_acmg_df, repeats_acmg_df], ignore_index=True)
-    return sv_df, cnv_df, repeats_df, acmg_df
+    annotsv_list = glob.glob(f'{dfolder}/{sample_para}*AnnotSV*')
+    df = pd.DataFrame()
+    acmg_df = pd.DataFrame()
+    for i in range(len(annotsv_list)):
+        data , acmg = annotsv_data_arrange(annotsv_list[i], sample_para)
+        df = pd.concat([df, data], ignore_index=True)
+        acmg_df = pd.concat([acmg_df, acmg], ignore_index=True)
+    return df, acmg_df
 
 
 def annovar(sample_para, ref_version):
-    snv_data = glob.glob(f'{dfolder}/{sample_para}*snv*')[0]
+    snv_data = glob.glob(f'{dfolder}/{sample_para}*ANNOVAR*')[0]
     snv_df = annovar_data_arrange(snv_data, sample_para, ref_version)
     return snv_df
 
@@ -138,9 +138,9 @@ annovar_df = pd.DataFrame()
 acmg_df = pd.DataFrame()
 sample_list = pd.read_csv(para_list, sep='\t', header=None)[0].to_list()
 for sample_para in sample_list:
-    sv_df, cnv_df, repeats_df, acmg = annotsv(sample_para)
+    annotsv_data_df, acmg = annotsv(sample_para)
     snv_df = annovar(sample_para, ref)
-    annotsv_df = pd.concat([annotsv_df, sv_df, cnv_df, repeats_df], ignore_index=True)
+    annotsv_df = pd.concat([annotsv_df, annotsv_data_df], ignore_index=True)
     annovar_df =  pd.concat([annovar_df, snv_df], ignore_index=True)
     acmg_df = pd.concat([acmg_df, acmg], ignore_index=True)
 

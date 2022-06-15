@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 #SBATCH -A MST109178        # Account name/staging number
 #SBATCH -J AnnotSV_ANNOVAR_data_merge         # Job name
-#SBATCH -p ngs96G           # Partition Name 
-#SBATCH -c 28               # core preserved 
-#SBATCH --mem=92G           # memory used
+#SBATCH -p ngs7G           # Partition Name 
+#SBATCH -c 2               # core preserved 
+#SBATCH --mem=7G           # memory used
 #SBATCH -o out.log          # Path to the standard output file 
 #SBATCH -e err.log          # Path to the standard error ouput file
 #SBATCH --mail-user=
