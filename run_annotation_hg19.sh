@@ -38,7 +38,7 @@ head -n 1 ${para}.hg19_multianno.txt > ${para}.filtered_annotation.txt
 grep -e exonic -e splicing ${para}.hg19_multianno.txt | grep -P -v "\tsynonymous" | grep -P -v "\tncRNA_exonic\t" >> ${para}.filtered_annotation.txt
 
 #Adding hg19_TWB1496 qc
-#sh ${QC_ADDING_SH} -a ${para}.filtered_annotation.txt -q ${hg19_TWB1496_QC} -o ${para}.filtered_annotation_QC.txt
+sh ${QC_ADDING_SH} -a ${para}.filtered_annotation.txt -q ${hg19_TWB1496_QC} -o ${para}.filtered_annotation_QC.txt
 
 
 
