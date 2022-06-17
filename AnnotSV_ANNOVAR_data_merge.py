@@ -79,10 +79,10 @@ def annotsv_data_arrange(annotsv_data, sample_para):
                     'OMIM_inheritance', 'OMIM_morbid', 'OMIM_morbid_candidate', 'LOEUF_bin',
                     'GnomAD_pLI', 'ExAC_pLI', 'AnnotSV_ranking_score',
                     'AnnotSV_ranking_criteria', 'ACMG_class']
+    data['Chr'] = [f'chr{num}' for num in data['Chr'].to_list()]
     data_ACMG = data[data['Annotation_mode'] == 'full'][['Chr', 'Start', 'End', 'Ref', 'Alt',
                     'AnnotSV_ranking_score','AnnotSV_ranking_criteria', 'ACMG_class']]
     data = data[data['Annotation_mode'] == 'split']
-    data['Chr'] = [f'chr{num}' for num in data['Chr'].to_list()]
     data[sample_para] = [sample.split(':')[0] for sample in data['sample'].to_list()]
     data.drop(['sample'], axis=1, inplace=True)
     return data, data_ACMG
