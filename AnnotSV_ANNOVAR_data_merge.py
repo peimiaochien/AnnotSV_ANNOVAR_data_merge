@@ -140,14 +140,16 @@ sample_list = pd.read_csv(para_list, sep='\t', header=None)[0].to_list()
 for sample_para in sample_list:
     annotsv_data_df, acmg = annotsv(sample_para)
     snv_df = annovar(sample_para, ref)
-    annotsv_df = pd.concat([annotsv_df, annotsv_data_df], ignore_index=True)
+    annotsv_df = pd.concat([annotsv_df, annotsv_data_df, acmg], ignore_index=True)
     annovar_df =  pd.concat([annovar_df, snv_df], ignore_index=True)
-    acmg_df = pd.concat([acmg_df, acmg], ignore_index=True)
+    #acmg_df = pd.concat([acmg_df, acmg], ignore_index=True)
 
 
 annotsv_df = process(annotsv_df, ',')
 annovar_df = process(annovar_df, ',')
-total_df = pd.concat([annotsv_df, annovar_df, acmg_df], ignore_index=True)
+
+
+total_df = pd.concat([annotsv_df, annovar_df], ignore_index=True)
 
 ## info col list
 info_col_list = total_df.columns.to_list()[5:]
